@@ -4,7 +4,7 @@ LDFLAGS = $(shell pkg-config --libs libmicrohttpd libcjson mysqlclient)
 
 TARGET = ProtectWAS
 SRCS = main.c
-OBJS = $(SRC:.c=.o)
+OBJS = $(SRCS:.c=.o)
 
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS) $(LDFLAGS)
