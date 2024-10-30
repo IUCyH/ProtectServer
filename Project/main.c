@@ -39,7 +39,7 @@ char* GetEncryptKey()
 	FILE* fp;
 	char* key = (char*)malloc(sizeof(char) * keyLength);
 
-	fp = fopen("/home/ubuntu/ProtectWAS/Project/TokenEncryptKey.txt", "r");
+	fp = fopen("/home/ubuntu/ProtectServer/TokenEncryptKey.txt", "r");
 
 	if(fp == NULL)
 	{
