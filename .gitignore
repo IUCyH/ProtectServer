@@ -52,3 +52,4 @@ Mkfile.old
 dkms.conf
 
 TokenEncryptKey.txt
+Project/ObjectFiles/*.o
