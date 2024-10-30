@@ -1,9 +1,9 @@
 CC = gcc
-CFLAGS = $(shell pkg-config --cflags libmicrohttpd libcjson mysqlclient)
-LDFLAGS = $(shell pkg-config --libs libmicrohttpd libcjson mysqlclient)
+CFLAGS = $(shell pkg-config --cflags libmicrohttpd libcjson mysqlclient libjwt libcurl)
+LDFLAGS = $(shell pkg-config --libs libmicrohttpd libcjson mysqlclient libjwt libcurl)
 
 TARGET = ProtectWAS
-SRCS = main.c server.c authenticator.c
+SRCS = main.c server.c authenticator.c tokenProvider.c googleJWTInfoGenerator.c
 OBJS = $(SRCS:.c=.o)
 
 $(TARGET): $(OBJS)
