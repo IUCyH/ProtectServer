@@ -9,7 +9,7 @@ vpath %.c $(SERVER_SRC_DIR) $(LOGIN_SRC_DIR)
 vpath %.h $(SERVER_SRC_DIR)/Header $(LOGIN_SRC_DIR)/Header
 
 TARGET = ProtectWAS
-SRCS = main.c server.c dataHandler.c authenticator.c tokenProvider.c googleJWTInfoGenerator.c
+SRCS = main.c server.c dataHandler.c queryGenerator.c authenticator.c tokenProvider.c googleJWTInfoGenerator.c
 OBJS = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 $(TARGET): $(OBJ_DIR) $(OBJS)
@@ -19,7 +19,7 @@ $(OBJ_DIR):
 	mkdir -v $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: %.c
-	$(CC) -c $< -o $@ $(CFLAGS)
+	$(CC) -g -c $< -o $@ $(CFLAGS)
 
 clean:
 	rm -f $(OBJS) $(TARGET)

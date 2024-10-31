@@ -36,34 +36,46 @@ void CloseDB()
 
 QueryResult* Search(const char* query)
 {
-	MYSQL_RES* result = mysql_store_result(conn);
-	MYSQL_ROW row;
 	QueryResult* queryResult = (QueryResult*)malloc(sizeof(QueryResult));
+	MYSQL_RES* result = NULL;
+	MYSQL_ROW row;
 
 	queryResult->result = NULL;
+	queryResult->rowCount = 0;
+	queryResult->fieldCount = 0;
 
 	if(!mysql_query(conn, query))
 	{
 		int index = 0;
+		result = mysql_store_result(conn);
+
+		if(result == NULL)
+		{
+			return NULL;
+		}
+		
+		queryResult->rowCount = mysql_num_rows(result);
+		queryResult->fieldCount = mysql_num_fields(result);
+
+		queryResult->result = (char***)malloc(sizeof(char**) * queryResult->rowCount);
+		for(int i = 0; i < queryResult->rowCount; i++)
+		{
+			queryResult->result[i] = (char**)malloc(sizeof(char*) * queryResult->fieldCount);
+		}
 
 		while((row = mysql_fetch_row(result)) != NULL)
 		{
-			if(queryResult->result == NULL)
-			{
-				queryResult->rowCount = mysql_num_rows(result);
-				queryResult->fieldCount = mysql_num_fields(result);
-
-				queryResult->result = (char***)malloc(sizeof(char**) * queryResult->rowCount);
-				for(int i = 0; i < queryResult->rowCount; i++)
-				{
-					queryResult->result[i] = (char**)malloc(sizeof(char*) * queryResult->fieldCount);
-				}
-			}
-
 			for(int i = 0; i < queryResult->fieldCount; i++)
 			{
-				queryResult->result[index][i] = (char*)malloc(sizeof(char) * (strlen(row[i]) + 1));
-				strcpy(queryResult->result[index][i], row[i]);
+				if(row[i] != NULL)
+				{
+					queryResult->result[index][i] = (char*)malloc(sizeof(char) * (strlen(row[i]) + 1));
+					strcpy(queryResult->result[index][i], row[i]);
+				}
+				else
+				{
+					queryResult->result[index][i] = NULL;
+				}
 			}
 
 			index++;
@@ -74,7 +86,11 @@ QueryResult* Search(const char* query)
 		fprintf(stderr, "Can't execute query!");
 		return NULL;
 	}
+	
+	if(result != NULL)
+	{
+		mysql_free_result(result);
+	}
 
-	mysql_free_result(result);
 	return queryResult;
 }

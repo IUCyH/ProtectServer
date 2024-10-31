@@ -3,6 +3,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include "server.h"
+#include "dataHandler.h"
 #include "tokenProvider.h"
 
 #define PORT 8080
@@ -20,14 +21,16 @@ int main()
 	pthread_sigmask(SIG_BLOCK, &sigset, NULL);
 
 	StartServer(PORT);
+	OpenDB();
 
-	char* email = "ghdckdwn8456@gmail.com";
-	char* uid = "1";
-	char* key = GetEncryptKey();
+	//char* email = "ghdckdwn8456@gmail.com";
+	//char* uid = "1";
+	//char* key = GetEncryptKey();
 	//char* token = MakeAccessToken(email, uid,
 
 	sigwait(&sigset, &sig);
 
+	CloseDB();
 	StopServer();
 
 	return 0;
@@ -48,5 +51,6 @@ char* GetEncryptKey()
 	}
 
 	fgets(key, keyLength, fp);
+	free(fp);
 	return key;
 }
