@@ -6,7 +6,7 @@
 
 static int ValidateExp(jwt_t* decodedToken)
 {
-	const char* exp = jwt_get_grant_int(jwt, "exp");
+	int exp = jwt_get_grant_int(decodedToken, "exp");
 	time_t now = time(NULL);
 
 	if(exp < now)

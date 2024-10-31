@@ -26,7 +26,7 @@ char* MakeAccessToken(const char* uid, const char* encryptKey)
 	return accessToken;
 }
 
-char* MakeRefreshToken(const char* email, const char* uid, const char* encryptKey)
+char* MakeRefreshToken(const char* uid, const char* encryptKey)
 {
 	jwt_t* jwt = NULL;
 	time_t now = time(NULL);
