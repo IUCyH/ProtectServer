@@ -4,11 +4,8 @@
 #include <pthread.h>
 #include "server.h"
 #include "dataHandler.h"
-#include "tokenProvider.h"
 
 #define PORT 8080
-
-char* GetEncryptKey();
 
 int main()
 {
@@ -22,11 +19,6 @@ int main()
 
 	StartServer(PORT);
 	OpenDB();
-
-	//char* email = "ghdckdwn8456@gmail.com";
-	//char* uid = "1";
-	//char* key = GetEncryptKey();
-	//char* token = MakeAccessToken(email, uid,
 
 	sigwait(&sigset, &sig);
 
