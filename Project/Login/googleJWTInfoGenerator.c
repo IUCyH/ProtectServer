@@ -8,7 +8,7 @@
 
 #define GOOGLE_OAUTH2_CERTS_URL "https://www.googleapis.com/oauth2/v3/certs"
 
-size_t WriteData(void *ptr, size_t size, size_t nmemb, char *data)
+size_t WriteData(void* ptr, size_t size, size_t nmemb, char* data)
 {
 	int dataSize = size * nmemb;
 
@@ -74,10 +74,9 @@ GoogleUserInfo* GetInformation(const char* token)
 	}
 
 	const char* sub = jwt_get_grant(jwt, "sub");
-	const char* email = jwt_get_grant(jwt, "email");
 	GoogleUserInfo* userInfo = (GoogleUserInfo*)malloc(sizeof(GoogleUserInfo));
 
-	if(sub == NULL || email == NULL)
+	if(sub == NULL)
 	{
 		fprintf(stderr, "Required claims not found.\n");
 		
@@ -87,7 +86,6 @@ GoogleUserInfo* GetInformation(const char* token)
 	}
 
 	userInfo->uid = sub;
-	userInfo->email = email;
 
 	jwt_free(jwt);
 	free(publicKey);

@@ -2,8 +2,12 @@
 
 # define AUTHENTICATOR
 
+#define DECODE_ERROR -1
+#define EXP_ERROR 0
+#define SUCCESS 1
+
 #include <stdio.h>
 
-void Authenticate();
+int Authenticate(const char* token, const char* encryptKey);
 
 #endif
