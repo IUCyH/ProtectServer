@@ -5,6 +5,7 @@
 #include <cJSON.h>
 #include "queryGenerator.h"
 #include "dataHandler.h"
+#include "authenticator.h"
 #include "server.h"
 
 //static ServerContext* serverContext;
@@ -35,19 +36,71 @@ static char* GetRequestType(const char* url)
 	return result;
 }
 
+static char* GetTokenFromHeader(char* header)
+{
+	char* nextPtr = NULL;
+	char* trash = strtok_r(header, " ", &nextPtr);
+
+	if(trash == NULL)
+	{
+		return NULL;
+	}
+
+	char* result = strtok_r(NULL, " ", &nextPtr);
+	return result;
+}
+
+static int IsValid(const char* token)
+{
+	int result = Authenticate(token);
+
+	switch(result)
+	{
+		case ENCRYPT_KEY_NOT_FOUND:
+		case DECODE_ERROR:
+		case EXP_ERROR:
+			return 0;
+		case SUCCESS:
+			return 1;
+	}
+
+	return 0;
+}
+
 static enum MHD_Result HandleGet(struct MHD_Connection* connection, const char* url)
 {
-	// TODO: Header 검사하기
 	char* requestType = GetRequestType(url);
 	char* json = (char*)malloc(sizeof(char) * 513);
+	/*
+	char* header = (char*)MHD_lookup_connection_value(connection, MHD_HEADER_KIND, "Authorization");
 
+	if(header == NULL)
+	{
+		fprintf(stderr, "Can't find required header\n");
+		return MakeHttpResult(connection, "Required header not found", MHD_HTTP_BAD_REQUEST);
+	}
+
+	char* token = GetTokenFromHeader(header);
+	// TODO: 리프레시 토큰 관련 로직
+	if(token == NULL)
+	{
+		fprintf(stderr, "Can't get a token from header\n");
+		return MakeHttpResult(connection, "Token not found", MHD_HTTP_BAD_REQUEST);
+	}
+
+	if(!IsValid(token))
+	{
+		fprintf(stderr, "Token isn't valid\n");
+		return MakeHttpResult(connection, "Token not valid", MHD_HTTP_UNAUTHORIZED);
+	}
+	*/
 	if(!strcmp("/user/", requestType))
 	{
 		char* idString = (char*)MHD_lookup_connection_value(connection, MHD_GET_ARGUMENT_KIND, "user_id");
 
 		if(idString == NULL)
 		{
-			fprintf(stderr, "Can't get id from url query string!");
+			fprintf(stderr, "Can't get id from url query string!\n");
 			return MakeHttpResult(connection, "Invalid url", MHD_HTTP_BAD_REQUEST);
 		}
 

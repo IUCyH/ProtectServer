@@ -35,22 +35,3 @@ int main()
 
 	return 0;
 }
-
-char* GetEncryptKey()
-{
-	const int keyLength = 257;
-	FILE* fp;
-	char* key = (char*)malloc(sizeof(char) * keyLength);
-
-	fp = fopen("/home/ubuntu/ProtectServer/TokenEncryptKey.txt", "r");
-
-	if(fp == NULL)
-	{
-		fprintf(stderr, "Fail to open file");
-		return NULL;
-	}
-
-	fgets(key, keyLength, fp);
-	free(fp);
-	return key;
-}
