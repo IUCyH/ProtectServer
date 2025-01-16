@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-char* MakeAccessToken(const char* uid, const char* encryptKey);
-char* MakeRefreshToken(const char* uid, const char* encryptKey);
+char* MakeAccessToken(const char* uid);
+char* MakeRefreshToken(const char* uid);
 
 #endif

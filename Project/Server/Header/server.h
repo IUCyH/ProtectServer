@@ -3,17 +3,9 @@
 # define SERVER_H
 
 #include <stdio.h>
-#include <microhttpd.h>
+#include "mongoose.h"
 
-static enum MHD_Result HandleRequest(void* cls,
-							  struct MHD_Connection* connection,
-						      const char* url,
-							  const char* method,
-							  const char* version,
-							  const char* upload_data,
-							  size_t* upload_data_size,
-							  void** con_cls);
-void StartServer(unsigned short port);
-void StopServer();
+void StartServer(struct mg_mgr* mgr, char* portURL);
+void StopServer(struct mg_mgr* mgr);
 
 #endif

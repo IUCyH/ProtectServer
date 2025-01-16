@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <jwt.h>
+#include "tokenAnalyzer.h"
 #include "authenticator.h"
 
 static int ValidateExp(jwt_t* decodedToken)
@@ -18,51 +19,28 @@ static int ValidateExp(jwt_t* decodedToken)
 	return 1;
 }
 
-static char* GetEncryptKey()
+AuthResult Authenticate(const char* token)
 {
-	const int keyLength = 257;
-	FILE* fp;
-	char* key = (char*)malloc(sizeof(char) * keyLength);
+	jwt_t* jwt = DecodeToken(token);
+	AuthResult authResult;
 
-	fp = fopen("/home/ubuntu/ProtectServer/TokenEncryptKey.txt", "r");
+	authResult.code = 0;
+	authResult.jwt = NULL;
 
-	if(fp == NULL)
+	if(jwt == NULL)
 	{
-		fprintf(stderr, "Fail to open file");
-		return NULL;
+		authResult.code = DECODE_ERROR;
+	}
+	else if(!ValidateExp(jwt))
+	{
+		fprintf(stderr, "Token expired");
+		authResult.code = EXP_ERROR;
+	}
+	else
+	{
+		authResult.code = SUCCESS;
+		authResult.jwt = jwt;
 	}
 
-	fgets(key, keyLength, fp);
-	
-	fclose(fp);
-	return key;
-}
-
-int Authenticate(const char* token)
-{
-	jwt_t* jwt = NULL;
-	char* encryptKey = GetEncryptKey();
-
-	if(encryptKey == NULL)
-	{
-		fprintf(stderr, "EncryptKey is NULL");
-		return ENCRYPT_KEY_NOT_FOUND;
-	}
-
-	int decodeResult = jwt_decode(&jwt, token, (const unsigned char*)encryptKey, strlen(encryptKey));
-
-	free(encryptKey);
-
-	if(decodeResult)
-	{
-		fprintf(stderr, "Can't decode a token");
-		return DECODE_ERROR;
-	}
-
-	if(!ValidateExp(jwt))
-	{
-		return EXP_ERROR;
-	}
-
-	return SUCCESS;	
+	return authResult;
 }
