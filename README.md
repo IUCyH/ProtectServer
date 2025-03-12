@@ -1,4 +1,4 @@
-# Health-Assistant 서버
+# TeamUp-Server
 
 # 요약
 - 개발언어: C
@@ -8,9 +8,4 @@
 - 기타
   - cJSON으로 json 파싱 및 생성
   - mysql.h 로 maria db 제어
-    
-# 개발자
-- 홍재민
-
-# 라이선스
-Licensed under the [MIT](LICENSE) license.
+  - 메모리 풀링으로 메모리 관리
